@@ -1,0 +1,13 @@
+Recovery - 56700.0
+Power Engineer - 96140.0
+Preparatory - 128460.0
+Pyramid - 65650.0
+Fossil - 137200.0
+Mosque - 248400.0
+Atomic - 100000.0
+Electricity - 31280.0
+Industrial - 79200.0
+Carryover - 281865.0
+Resident - 56100.0
+Ancillary - 300000.0
+Power Engineer - 246000.0
