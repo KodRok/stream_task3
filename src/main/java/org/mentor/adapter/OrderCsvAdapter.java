@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class OrderCsvAdapter implements OrderAdapter {
@@ -15,16 +16,14 @@ public class OrderCsvAdapter implements OrderAdapter {
 
     @Override
     public List<Order> parseToOrders(List<String> lines) {
-        List<Order> orders = new ArrayList<>();
-        for (String line : lines) {
-            String[] parts = line.split(";");
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-            LocalDateTime dateTime = LocalDateTime.parse(parts[DATETIME_INDEX], formatter);
-            String name = parts[COMPANYNAME_INDEX];
-            int weight = Integer.parseInt(parts[WEIGHT_INDEX]);
-            Order order = new Order(dateTime, name, weight);
-            orders.add(order);
-        }
-        return orders;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        return lines.stream()
+                .map(line -> line.split(";"))
+                .map(parts -> new Order(
+                        LocalDateTime.parse(parts[DATETIME_INDEX], formatter),
+                        parts[COMPANYNAME_INDEX],
+                        Integer.parseInt(parts[WEIGHT_INDEX])
+                ))
+                .toList();
     }
 }

@@ -26,12 +26,18 @@ public class FileOrderService {
 
     public void write(String outputFilename, List<OrderReport> orderReports) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilename))) {
-            for (OrderReport orderReport: orderReports) {
-                writer.write(orderReport.toString());
-                writer.newLine();
-            }
+            orderReports.stream()
+                    .map(OrderReport::toString)
+                    .forEach(line -> {
+                        try {
+                            writer.write(line);
+                            writer.newLine();
+                        } catch (IOException e) {
+                            throw new WriteFileException("Ошибка записи строки в файл: " + e.getMessage());
+                        }
+                    });
         } catch (IOException e) {
-            throw  new WriteFileException("Записать файл не удалось: " + e.getMessage());
+            throw new WriteFileException("Не удалось открыть или создать файл для записи: " + e.getMessage());
         }
     }
 }

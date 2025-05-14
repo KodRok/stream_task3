@@ -7,28 +7,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class OrderService {
-
     public List<OrderReport> calculateDiscount(List<Order> orders, double startDiscount,
                                                double discountStep, double pricePerKg) {
         validate(startDiscount, discountStep, pricePerKg);
-        Collections.sort(orders, Comparator.comparing(Order::getDateTime));
+
         if (orders.isEmpty()) {
             throw new IllegalArgumentException("Список заказов пуст");
         }
 
-        List<OrderReport> orderReports = new ArrayList<>();
-        for (int i = 0; i < orders.size(); i++) {
-            Order order = orders.get(i);
-            double discount = Math.max(0, startDiscount - i * discountStep);
-            double orderWeight = order.getCementWeight();
-            double discountAmount = discount * pricePerKg * orderWeight;
-            double orderAmount = orderWeight * pricePerKg - discountAmount;
-            OrderReport orderReport = new OrderReport(order.getCompanyName(), orderAmount);
-            orderReports.add(orderReport);
-        }
-        return orderReports;
+        List<Order> sortedOrders = orders.stream()
+                .sorted(Comparator.comparing(Order::getDateTime))
+                .toList();
+
+        return IntStream.range(0, sortedOrders.size())
+                .mapToObj(i -> {
+                    Order order = sortedOrders.get(i);
+                    double discount = Math.max(0, startDiscount - i * discountStep);
+                    double orderWeight = order.getCementWeight();
+                    double discountAmount = discount * pricePerKg * orderWeight;
+                    double orderAmount = orderWeight * pricePerKg - discountAmount;
+                    return new OrderReport(order.getCompanyName(), orderAmount);
+                })
+                .collect(Collectors.toList());
     }
 
     private static void validate(double startDiscount, double discountStep, double pricePerKg) {
