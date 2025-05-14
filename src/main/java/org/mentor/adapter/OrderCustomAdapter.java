@@ -23,6 +23,6 @@ public class OrderCustomAdapter implements OrderAdapter {
                         parts[COMPANY_NAME_INDEX],
                         Integer.parseInt(parts[WEIGHT_INDEX])
                 ))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

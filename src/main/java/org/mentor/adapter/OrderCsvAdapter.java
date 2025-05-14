@@ -24,6 +24,6 @@ public class OrderCsvAdapter implements OrderAdapter {
                         parts[COMPANYNAME_INDEX],
                         Integer.parseInt(parts[WEIGHT_INDEX])
                 ))
-                .collect(Collectors.toList());
+                .toList();
     }
 }
