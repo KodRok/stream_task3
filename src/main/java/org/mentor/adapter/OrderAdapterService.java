@@ -3,8 +3,6 @@ package org.mentor.adapter;
 import org.mentor.exception.OrderAdapterNotFoundException;
 
 public class OrderAdapterService {
-
-
     public OrderAdapter getAdapter(String fileName) {
         String extension = getFileExtension(fileName);
         switch (extension) {
